@@ -1,0 +1,38 @@
+- name: Create a DB server using EC2 module
+  hosts: localhost
+  connection: local
+  vars:
+    ami: ami-1fbad07c
+    sec_group: sg-77602e11
+    region: ap-southeast-1
+    subnet: subnet-9d05befa
+    server: db_server
+  roles:
+    - create-ec2 
+
+- name: Create a Web server using EC2 module
+  hosts: localhost
+  connection: local
+  vars:
+    ami: ami-1fbad07c
+    sec_group: sg-77602e11
+    region: ap-southeast-1
+    subnet: subnet-9d05befa
+    server: web_server
+  roles:
+    - create-ec2
+
+- name: Setup Python Dependencies
+  hosts: db_server, web_server
+  roles:
+    - python_dependencies
+
+- name: Setup DB Server
+  hosts: db_server
+  roles:
+    - mariadb 
+
+- name: Setup Web Server
+  hosts: web_server
+  roles:
+    - flask_app
