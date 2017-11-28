@@ -1,2 +1,8 @@
 ---
 # tasks file for edb-setup
+
+    - name: Install EDB
+      yum:
+        name: 'edb-as{{ version }}'
+        state: installed
+      become: true

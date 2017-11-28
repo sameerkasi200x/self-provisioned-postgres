@@ -6,7 +6,7 @@
     sec_group: sg-77602e11
     region: ap-southeast-1
     subnet: subnet-9d05befa
-    server: db_server
+    server: pg_primary
   roles:
     - create-ec2 
 
@@ -18,21 +18,29 @@
     sec_group: sg-77602e11
     region: ap-southeast-1
     subnet: subnet-9d05befa
-    server: web_server
+    server: pg_standby0
   roles:
     - create-ec2
 
-- name: Setup Python Dependencies
-  hosts: db_server, web_server
+# Optional Step which can be skipped if you have added repo manually in AMI itself
+- name: Setup EDB Repository
+  hosts: pg_servers
   roles:
-    - python_dependencies
+    - edb_repo_add
+    - edb-setup
 
-- name: Setup DB Server
-  hosts: db_server
+- name: Install EDB
+  hosts: pg_primary
+  vars:
+    primary_node: true
   roles:
-    - mariadb 
+    - create_edb_instance
 
-- name: Setup Web Server
-  hosts: web_server
+
+- name: Install EDB
+  hosts: pg_standby*
+  vars:
+    primary_node: false
   roles:
-    - flask_app
+    - create_edb_instance
+

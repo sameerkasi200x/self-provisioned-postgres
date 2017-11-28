@@ -1,0 +1,10 @@
+---
+# defaults file for create_edb_instance
+PGDATA: /pg/data
+EDBHOME: '/usr/edb/as{{ version }}/bin'
+PGWAL_DIR: '{{ PGDATA }}/pg_wal'
+PG_PASSWD_FILE: /tmp/passwd_file
+PGOWNER: postgres
+INITDB_PARAM: "-k"
+PGPORT: 5432
+primary_node: true

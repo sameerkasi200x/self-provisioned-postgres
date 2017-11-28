@@ -1,0 +1,12 @@
+pg_primary
+pg_standby0
+
+[primary]
+pg_primary
+
+[standby]
+pg_standby0
+
+[pg_servers]
+pg_primary
+pg_standby0

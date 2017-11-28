@@ -1,0 +1,27 @@
+       - name: Add Passwordfile
+         copy:
+           src: passwd_file
+           dest: '{{ PG_PASSWD_FILE }}'
+
+       ### Only one of the below two tasks will be executed
+       ## Make sure to edit both of them while making changes
+       ##########################################################################
+
+       - include_tasks: initdb.yml
+         vars:
+           PGWAL_DIR_OPT: ' -X {{ PGWAL_DIR }} '
+         when: ('{{ PGWAL_DIR | basename }}'!='{{ PGWAL_DIR | relpath(PGDATA) }}')
+
+       ################################## OR #####################################
+
+       - include_tasks: initdb.yml
+         when: ('{{ PGWAL_DIR | basename }}'=='{{ PGWAL_DIR | relpath(PGDATA) }}')
+
+       ##########################################################################
+
+
+       - name: Remove the password file
+         file:
+           path: '{{ PG_PASSWD_FILE }}'
+           state: absent
+         become: true
