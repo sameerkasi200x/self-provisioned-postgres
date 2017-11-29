@@ -18,13 +18,15 @@
     sec_group: sg-77602e11
     region: ap-southeast-1
     subnet: subnet-9d05befa
-    server: 'pg_standby{{ standby_id }}'
   tasks:
     - name: Use create-ec2 Role to create multiple Standby Instance
       include_role:
         name: create-ec2
+      vars:
+        server: 'pg_standby{{ standby_id }}'
       with_sequence: count='{{ standby_count }}'
-      loop_var: standby_id
+      loop_control:
+        loop_var: standby_id
 
 - name: Get IP of each server
   hosts: pg_servers

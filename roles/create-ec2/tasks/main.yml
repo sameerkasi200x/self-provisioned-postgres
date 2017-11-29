@@ -24,14 +24,16 @@
         path: 'host_vars/{{ server }}.yml'
         create: yes
         content: |
-              ansible_host: {{ item.private_ip }}
+              ansible_host: {{ my_server.private_ip }}
               ansible_user: centos
-              host_region: {{ item.region }}
-              instance_type: {{ item.instance_type }}
-              host_az: {{ item.placement }}
+              host_region: {{ my_server.region }}
+              instance_type: {{ my_server.instance_type }}
+              host_az: {{ my_server.placement }}
               host_os: CentOS
               os_version: 7
       with_items: '{{ ec2_output.instances }}'
+      loop_control:
+        loop_var: my_server
 
     - name: Add the new created instance to inventory
       lineinfile:
