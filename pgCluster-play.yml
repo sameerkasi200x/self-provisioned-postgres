@@ -8,7 +8,14 @@
     subnet: subnet-9d05befa
     server: pg_primary
   roles:
-    - create-ec2 
+    - create-ec2
+  tasks:
+    - name: Add node role (primary or standby) to host variables
+      local_action:
+        module: lineinfile
+        path: 'host_vars/{{ server }}'
+        line: 'primary_node: true'
+        state: present
 
 - name: Create a Web server using EC2 module
   hosts: localhost
@@ -21,26 +28,27 @@
     server: pg_standby0
   roles:
     - create-ec2
+  tasks:
+    - name: Add node role (primary or standby) to host variables
+      local_action:
+        module: lineinfile
+        path: 'host_vars/{{ server }}'
+        line: 'primary_node: false'
+        state: present
 
-# Optional Step which can be skipped if you have added repo manually in AMI itself
 - name: Setup EDB Repository
   hosts: pg_servers
   roles:
-    - edb_repo_add
     - edb-setup
 
-- name: Install EDB
+- name: Create EDB Instance
   hosts: pg_primary
-  vars:
-    primary_node: true
   roles:
     - create_edb_instance
+    - setup_pg_service
 
-
-- name: Install EDB
+- name: Setup Standby Servers
   hosts: pg_standby*
-  vars:
-    primary_node: false
   roles:
-    - create_edb_instance
-
+    - create_pg_standby
+    - setup_pg_service

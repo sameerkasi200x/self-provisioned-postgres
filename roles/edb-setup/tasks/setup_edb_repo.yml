@@ -1,24 +1,17 @@
----
-    - name: Install wget
-      yum: 
-        name: wget
-        state: installed
-      become: true
-    
     - name: Download the repo file
       get_url:
         dest: /tmp
         url: http://yum.enterprisedb.com/edbrepos/edb-repo-latest.noarch.rpm
-    
+
     - name: Install the repository rpm
       command: yum install -y /tmp/edb-repo-latest.noarch.rpm
       become: true
     - name: Install Enterprise Linux Repo
-      yum: 
+      yum:
         name: epel-release
         state: installed
       become: true
-    
+
     - name: Set username password
       replace:
         path: '{{ edb_repo_file }}'
@@ -30,11 +23,12 @@
       ini_file:
         path: '{{ edb_repo_file }}'
         section: '{{ item }}'
-        option: enabled  
+        option: enabled
         value: 1
       with_items: '{{ repo_list }}'
       become: true
-    
+
     - name: Refresh yum meta
       command: yum update meta
       become: true
+

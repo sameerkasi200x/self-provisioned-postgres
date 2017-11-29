@@ -1,6 +1,6 @@
 ---
 # tasks file for edb-setup
-
+    - include_task: setup_edb_repo.yml
     - name: Install EDB
       yum:
         name: 'edb-as{{ version }}'

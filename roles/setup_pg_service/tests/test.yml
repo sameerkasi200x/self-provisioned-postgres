@@ -2,4 +2,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - edb_repo_add
+    - setup_pg_service
