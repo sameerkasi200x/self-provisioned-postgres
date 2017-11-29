@@ -1,0 +1,48 @@
+- name: Create an EC2 instance for Primary
+  hosts: localhost
+  connection: local
+  vars:
+    ami: ami-1fbad07c
+    sec_group: sg-77602e11
+    region: ap-southeast-1
+    subnet: subnet-9d05befa
+    server: pg_primary
+  roles:
+    - create-ec2
+
+- name: Create an EC2 instance for Standby
+  hosts: localhost
+  connection: local
+  vars:
+    ami: ami-1fbad07c
+    sec_group: sg-77602e11
+    region: ap-southeast-1
+    subnet: subnet-9d05befa
+    server: 'pg_standby{{ item }}'
+  tasks:
+    - name: Use create-ec2 Role to create multiple Standby Instance
+      include_role:
+        name: create-ec2
+      with_sequence: count='{{ standby_count }}'
+
+- name: Get IP of each server
+  hosts: pg_servers
+  tasks:
+    - name: Add the list of standby servers to a file
+      local_action:
+        module: lineinfile
+        path: 'host_vars/server_list.txt'
+        create: yes
+        line: '{{ ansible_host }}'
+        state: present
+
+- name: Get Primary Server IP
+  hosts: pg_primary
+  tasks:
+    - name: Add primary name in standby variables
+      local_action:
+        module: lineinfile
+        path: 'group_vars/standby.yml'
+        line: 'primary_server: {{ ansible_host }}'
+        state: present
+      when: (standby_count > 0)

@@ -1,54 +1,8 @@
-- name: Create a DB server using EC2 module
-  hosts: localhost
-  connection: local
-  vars:
-    ami: ami-1fbad07c
-    sec_group: sg-77602e11
-    region: ap-southeast-1
-    subnet: subnet-9d05befa
-    server: pg_primary
-  roles:
-    - create-ec2
-  tasks:
-    - name: Add node role (primary or standby) to host variables
-      local_action:
-        module: lineinfile
-        path: 'host_vars/{{ server }}'
-        line: 'primary_node: true'
-        state: present
-
-- name: Create a Web server using EC2 module
-  hosts: localhost
-  connection: local
-  vars:
-    ami: ami-1fbad07c
-    sec_group: sg-77602e11
-    region: ap-southeast-1
-    subnet: subnet-9d05befa
-    server: pg_standby0
-  roles:
-    - create-ec2
-  tasks:
-    - name: Add node role (primary or standby) to host variables
-      local_action:
-        module: lineinfile
-        path: 'host_vars/{{ server }}'
-        line: 'primary_node: false'
-        state: present
-
+- import_playbook: server-setup.yml
 - name: Setup EDB Repository
   hosts: pg_servers
   roles:
     - edb-setup
 
-- name: Create EDB Instance
-  hosts: pg_primary
-  roles:
-    - create_edb_instance
-    - setup_pg_service
-
-- name: Setup Standby Servers
-  hosts: pg_standby*
-  roles:
-    - create_pg_standby
-    - setup_pg_service
+- import_playbook: primary-instance-setup.yml
+- import_playbook: standby-setup.yml

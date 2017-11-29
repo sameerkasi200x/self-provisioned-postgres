@@ -1,7 +1,7 @@
 ---
 # defaults file for setup_pg_service
 SERVICE_PRESTEP: /usr/edb/as10/bin/edb-as-10-check-db-dir ${PGDATA}
-PGHOME: /usr/edb/as10/bin
+PGHOME: /usr/edb/as10
 PG_DESCRIPTION: EnterpriseDB Postgres Advanced Server
 PGOWNER: postgres
 PGDATA: /pg/data
@@ -18,9 +18,9 @@ systemd_conf_setting:
   - {section: 'Service', option: 'PIDFILE', value: '{{ PGDATA }}/postmaster.pid'}
   - {section: 'Service', option: 'Type', value: 'forking' }
   - {section: 'Service', option: 'OOMScoreAdjust', value: '-1000' }
-  - {section: 'Service', option: 'ExecStart', value: '{{ PGHOME }}/pg_ctl -D ${PGDATA} start' }
-  - {section: 'Service', option: 'ExecStop', value: '{{ PGHOME }}/pg_ctl -D ${PGDATA} -m fast stop' }
-  - {section: 'Service', option: 'ExecReload', value: '{{ PGHOME }}/pg_ctl -D ${PGDATA} reload' }
+  - {section: 'Service', option: 'ExecStart', value: '{{ PGHOME }}/bin/pg_ctl -D ${PGDATA} start' }
+  - {section: 'Service', option: 'ExecStop', value: '{{ PGHOME }}/bin/pg_ctl -D ${PGDATA} -m fast stop' }
+  - {section: 'Service', option: 'ExecReload', value: '{{ PGHOME }}/bin/pg_ctl -D ${PGDATA} reload' }
   - {section: 'Service', option: 'KillMode', value: 'mixed' }
   - {section: 'Service', option: 'KillSignal', value: 'SIGINT' }
   - {section: 'Service', option: 'TimeoutSec', value: '300' }

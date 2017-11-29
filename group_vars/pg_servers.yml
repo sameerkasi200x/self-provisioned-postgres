@@ -1,5 +1,10 @@
-repl_username: repl_user
+replication_user: repl_user
 version: 10
+PGSERVICE: 'edb-postgres-as-{{ version }}'
+standby_count: 2
+PGOWNER: postgres
+PGPORT: 5432
+UNIX_SOCKET_DIR: /tmp
 repo_list:
   - ppas94
   - ppas95

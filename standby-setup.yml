@@ -1,0 +1,7 @@
+- name: Setup Standby Servers
+  hosts: standby
+  roles:
+    - create_edb_instance
+    - create_pg_standby
+    - setup_pg_service
+
