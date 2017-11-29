@@ -2,7 +2,7 @@ INITDB_PARAM: "-k --no-redwood-compat"
 PGDATA: /pg/data
 replication_user: repl_user
 # BEGIN ANSIBLE MANAGED BLOCK
-ansible_host: 172.100.0.59
+ansible_host: 172.100.0.41
 ansible_user: centos
 host_region: ap-southeast-1
 instance_type: t2.small

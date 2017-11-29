@@ -18,12 +18,13 @@
     sec_group: sg-77602e11
     region: ap-southeast-1
     subnet: subnet-9d05befa
-    server: 'pg_standby{{ item }}'
+    server: 'pg_standby{{ standby_id }}'
   tasks:
     - name: Use create-ec2 Role to create multiple Standby Instance
       include_role:
         name: create-ec2
       with_sequence: count='{{ standby_count }}'
+      loop_var: standby_id
 
 - name: Get IP of each server
   hosts: pg_servers
@@ -46,3 +47,4 @@
         line: 'primary_server: {{ ansible_host }}'
         state: present
       when: (standby_count > 0)
+
