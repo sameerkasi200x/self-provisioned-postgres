@@ -3,7 +3,7 @@ PGDATA: /pg/data
 replication_user: repl_user
 RANDOM_PASSWD_FILE: pg_passwd
 # BEGIN ANSIBLE MANAGED BLOCK
-ansible_host: 172.100.0.66
+ansible_host: 172.100.0.19
 ansible_user: centos
 host_region: ap-southeast-1
 instance_type: t2.small

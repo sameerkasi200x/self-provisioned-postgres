@@ -6,12 +6,12 @@
   roles:
     - create-ec2
 
-- name: Create an EC2 instance for Standby
+- name: Use create-ec2 Role to create multiple Standby Instance
   hosts: localhost
   connection: local
   vars:
   tasks:
-    - name: Use create-ec2 Role to create multiple Standby Instance
+    - name: Create EC2 instances for Standby
       include_role:
         name: create-ec2
       vars:
@@ -38,22 +38,3 @@
         create: yes
         line: '{{ ansible_host }}'
         state: present
-
-- name: Get Primary Server IP
-  hosts: pg_primary
-  tasks:
-    - name: Add primary name in standby variables
-      local_action:
-        module: lineinfile
-        path: 'group_vars/standby.yml'
-        regexp: '^primary_server:(.*)'
-        state: absent
-
-    - name: Add primary name in standby variables
-      local_action:
-        module: lineinfile
-        path: 'group_vars/standby.yml'
-        line: 'primary_server: {{ ansible_host }}'
-        state: present
-      when: (standby_count > 0)
-
