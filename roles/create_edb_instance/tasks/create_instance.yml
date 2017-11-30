@@ -1,8 +1,10 @@
-       - name: Add Passwordfile
-         copy:
-           src: passwd_file
-           dest: '{{ PG_PASSWD_FILE }}'
-
+       - include_tasks: rm_passwd_file.yml
+       - name: Add password to Password file
+         lineinfile:
+           line: "{{ PG_PASSWORD  | default(lookup('password', '{{ RANDOM_PASSWD_FILE }}') ) }}"
+           path: '{{ PG_PASSWD_FILE }}'
+           create: yes
+               
        ### Only one of the below two tasks will be executed
        ## Make sure to edit both of them while making changes
        ##########################################################################
@@ -19,9 +21,4 @@
 
        ##########################################################################
 
-
-       - name: Remove the password file
-         file:
-           path: '{{ PG_PASSWD_FILE }}'
-           state: absent
-         become: true
+       - include_tasks: rm_passwd_file.yml

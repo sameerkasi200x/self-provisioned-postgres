@@ -1,3 +1,2 @@
 create_instance: false
-primary_server: 172.100.0.28
-primary_server: 172.100.0.54
+primary_server: 172.100.0.22

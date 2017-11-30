@@ -7,10 +7,8 @@ pg_primary
 [standby]
 pg_standby1
 pg_standby2
-pg_standby3
 
 [pg_servers]
 pg_primary
 pg_standby1
 pg_standby2
-pg_standby3

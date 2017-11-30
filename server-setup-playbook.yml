@@ -2,10 +2,6 @@
   hosts: localhost
   connection: local
   vars:
-    ami: ami-1fbad07c
-    sec_group: sg-77602e11
-    region: ap-southeast-1
-    subnet: subnet-9d05befa
     server: pg_primary
   roles:
     - create-ec2
@@ -14,10 +10,6 @@
   hosts: localhost
   connection: local
   vars:
-    ami: ami-1fbad07c
-    sec_group: sg-77602e11
-    region: ap-southeast-1
-    subnet: subnet-9d05befa
   tasks:
     - name: Use create-ec2 Role to create multiple Standby Instance
       include_role:
@@ -28,6 +20,14 @@
       loop_control:
         loop_var: standby_id
 
+- name: Remove the host list file if it exists
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Remove the file
+      file:
+      path: 'host_vars/server_list.txt'
+      state: absent
 - name: Get IP of each server
   hosts: pg_servers
   tasks:
@@ -42,6 +42,13 @@
 - name: Get Primary Server IP
   hosts: pg_primary
   tasks:
+    - name: Add primary name in standby variables
+      local_action:
+        module: lineinfile
+        path: 'group_vars/standby.yml'
+        line: 'primary_server'
+        state: absent
+
     - name: Add primary name in standby variables
       local_action:
         module: lineinfile
