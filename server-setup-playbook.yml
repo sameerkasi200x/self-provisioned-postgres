@@ -26,8 +26,8 @@
   tasks:
     - name: Remove the file
       file:
-      path: 'host_vars/server_list.txt'
-      state: absent
+        path: 'host_vars/server_list.txt'
+        state: absent
 - name: Get IP of each server
   hosts: pg_servers
   tasks:
