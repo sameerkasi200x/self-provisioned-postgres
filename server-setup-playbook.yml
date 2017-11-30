@@ -46,7 +46,7 @@
       local_action:
         module: lineinfile
         path: 'group_vars/standby.yml'
-        line: 'primary_server'
+        regexp: '^primary_server:(.*)'
         state: absent
 
     - name: Add primary name in standby variables
